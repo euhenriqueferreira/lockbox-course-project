@@ -1,7 +1,7 @@
 <?php 
+    $db = new DB();
 
-    // Pega os dados
-    require 'dados.php';
+    $livros = $db->livros();
 
     // Seta a variável View com o nome da página
     view('index', ['livros'=>$livros]);
