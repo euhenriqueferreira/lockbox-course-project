@@ -10,10 +10,6 @@
     $filtrado = array_filter($livros, fn($l) => $l['id'] == $id);
     $livro = array_pop($filtrado);
 
-    // Seta a View como Livro
-    $view = 'livro'; 
-
-    // Chama o app para carregar a view dinamicamente
-    require 'views/templates/app.php';
+    view('livro', ['livro'=>$livro]);
 
 ?>

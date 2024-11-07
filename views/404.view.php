@@ -1,0 +1,1 @@
+<h1 class="text-lg font-bold text-center">Página não encontrada...</h1>

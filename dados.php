@@ -55,5 +55,8 @@
         'autor'=>'Dale Carnegie',
         'descricao'=>'Guia clássico para se relacionar com pessoas da melhor forma.'
         ],
-    ]
+    ];
+
+
+    $varTeste = 'Essa é minha variavel teste para testar a lógica MVC.';
 ?>
