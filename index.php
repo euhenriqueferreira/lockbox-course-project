@@ -2,6 +2,8 @@
     // Importando arquivo de funções
     require 'functions.php';
 
+    require 'models/Livro.php';
+
     // Arquivo do DB
     require 'database.php';
 
