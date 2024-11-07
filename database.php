@@ -1,27 +1,34 @@
 <?php
     class DB
     {
+        private $db;
+
+        public function __construct()
+        {
+            $this->db = new PDO('sqlite:database.sqlite');
+        }
         /*
             Retorna um array com todos os livros do DB.
             @return array[Livro];
         */
         public function livros(){
-            $db = new PDO('sqlite:database.sqlite');
-            $query = $db->query('select * from livros');
+
+            $query = $this->db->query("select * from livros");
             $itens = $query->fetchAll();
-            $retorno = [];
 
-            foreach ($itens as $item) {
-                $livro = new Livro();
-                $livro->id = $item['id'];
-                $livro->titulo = $item['titulo'];
-                $livro->autor = $item['autor'];
-                $livro->descricao = $item['descricao'];
+            return array_map(fn($item) => Livro::make($item), $itens);
+        }
 
-                $retorno[] = $livro;
-            }
+        public function livro($id){
+            $db = new PDO('sqlite:database.sqlite');
 
-            return $retorno;
+            $sql = "select * from livros";
+            $sql = $sql . " where id = " . $id;
+            $query = $this->db->query($sql);
+            $itens = $query->fetchAll();
+ 
+
+            return array_map(fn($item) => Livro::make($item), $itens)[0];
         }
     }
 ?>
