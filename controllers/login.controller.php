@@ -1,42 +1,42 @@
 <?php
-
-    $mensagem = $_REQUEST['mensagem'] ?? '';
-
-
-    // 1. Receber o formulário com email e senha
+    // Se o metodo do formulário de login for POST
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        // Pega os valores dos input
         $email = $_POST['email'];
         $senha = $_POST['senha'];
 
+        /* 
+            Chama a função de validação e passa em array
+            por quais validações o valor deve passar
+        */
         $validacao = Validacao::validar([
             'email' => ['required', 'email'],
             'senha' => ['required']
         ], $_POST);
 
-        if($validacao->naoPassou()){
+        // Verifica se não passou, e caso não passe na validacao, redireciona para o login
+        if($validacao->naoPassou('login')){
             header('location: /login');
             exit();
         }
 
 
-        // 2. Fazer uma consulta no DB com email e senha
+        // Faz uma consulta no DB para ver se o usuário existe
         $usuario = $database->query(
             query: "select * from usuarios where email = :email and senha = :senha",
             class: Usuario::class,
             params: compact('email', 'senha')
         )->fetch();
 
+        // Se o usuário existir, adiciona um item 'auth' na sessão, com o valor da variável $usuario
         if($usuario){
-            // 3. Se existir, vamos adicionar na sessão que o usuário esta autenticado
             $_SESSION['auth'] = $usuario;
-            $_SESSION['mensagem'] = "Seja Bem Vindo, " . $usuario->nome. "!";
+            flash()->push('mensagem', "Seja Bem Vindo, " . $usuario->nome. "!");
             header('location: /');
             exit();
         }
-
-        //4. Mudar a informação no nosso navbar para mostrar o nome do usuário
     }
 
 
-    view('login', compact('mensagem'));
+    view('login');
 ?>

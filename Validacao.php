@@ -5,23 +5,27 @@
         public $validacoes = [];
 
         public static function validar($regras, $dados){
-            // nome do campo e regras []
-
+            // Instancia um objeto Validacao na variavel $validacao
             $validacao = new Self;
 
+            // Percorre $regras
             foreach($regras as $campo => $regrasDoCampo){
+                // Percorre a array de regras em cada item do array $regras
                 foreach($regrasDoCampo as $regra){
+                    // Pega o valor do campo nos $dados e seta na variavel $valorDoCampo
                     $valorDoCampo = $dados[$campo];
 
-
+                    // Testa se a regra é 'confirmed'
                     if($regra == 'confirmed'){
                         $validacao->$regra($campo, $valorDoCampo, $dados["{$campo}_confirmacao"]);
-                    } else if(str_contains($regra, ':')){
-                        $temp = explode(':', $regra);
-                        $regra = $temp[0];
-                        $regraAr = $temp[1];
+                    } else if(str_contains($regra, ':')){// Testa se a regra tem ':', como 'min:8' e 'max:30'
+                        $temp = explode(':', $regra);//Explode a string com base no divisor, retorna uma array com as partes que sobraram
+                        $regra = $temp[0]; // Regra, como 'min'
+                        $regraAr = $temp[1];// Valor, como '8'
+                        // Chama o método dinamicamente através do $regra, dependendo da regra que for, ele chama a função correspondente
                         $validacao->$regra($regraAr, $campo, $valorDoCampo);
                     } else{
+                        // Validação normal
                         $validacao->$regra($campo, $valorDoCampo);
                     }
                 }
@@ -33,6 +37,23 @@
         private function required($campo, $valor){
             if(strlen($valor) == 0){
                 $this->validacoes[] = "O $campo é obrigatório";
+            }
+        }
+
+        private function unique($table, $campo, $valor){
+            if(strlen($valor) == 0){
+                return;
+            }
+
+            $db = new Database(config('database'));
+            
+            $resultado = $db->query(
+                query: "select * from $table where $campo = :valor",
+                params: compact('valor')
+            )->fetch();
+
+            if($resultado){
+                $this->validacoes[] = 'Esse e-mail já está em uso';
             }
         }
 
@@ -62,14 +83,20 @@
 
         private function strong($campo, $valor){
             if( ! strpbrk($valor, '!@#$%&*().,;?/')){
-                $this->validacoes[] = "A $campo precisa conter um *";
+                $this->validacoes[] = "A $campo precisa conter pelo menos um caractere especial";
             }
         }
 
 
 
-        public function naoPassou(){
-            $_SESSION['validacoes'] = $this->validacoes;
+        public function naoPassou($nomeCustomizado = null){
+            $chave = 'validacoes';
+            
+            if($nomeCustomizado){
+                $chave .= '_'.$nomeCustomizado;
+            }
+        
+            flash()->push($chave, $this->validacoes);
             return sizeof($this->validacoes) > 0;
         }
     }

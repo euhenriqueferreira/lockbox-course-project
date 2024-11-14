@@ -5,12 +5,13 @@
     session_start();
 
     // Importando arquivo de funções
+    require 'Flash.php';
     require 'functions.php';
-    
-    $config = require 'config.php';
+    require 'Validacao.php';
 
-    // Arquivo do DB
+    /* Chamada do arquivo do DB, que recebe por cascata o valor da variável $config */
     require 'database.php';
-    // Request da página sempre vai cair no index.php (a página não troca)
+    
+    // Index chama o Route php
     require 'routes.php';
 ?>
