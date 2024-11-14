@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     // Importando arquivo de funções
     require 'functions.php';
 
