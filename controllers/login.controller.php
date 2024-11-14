@@ -23,13 +23,27 @@
 
         // Faz uma consulta no DB para ver se o usuário existe
         $usuario = $database->query(
-            query: "select * from usuarios where email = :email and senha = :senha",
+            query: "select * from usuarios where email = :email",
             class: Usuario::class,
-            params: compact('email', 'senha')
+            params: compact('email')
         )->fetch();
 
         // Se o usuário existir, adiciona um item 'auth' na sessão, com o valor da variável $usuario
         if($usuario){
+            // Pega a senha que o usuario digitou
+            $senhaDoPost = $_POST['senha'];
+
+            // Pega a senha do usuário encontrado no banco de dados através do email
+            $senhaDoBanco = $usuario->senha;
+
+            // password_verify() função nativa que verifica com a encriptação se as senhas batem
+            if( ! password_verify($senhaDoPost, $senhaDoBanco)){
+                // Se não bater, cria uma mensagem flash
+                flash()->push('validacoes_login', ['Usuário ou senha não encontrados!']);
+                header('location: /login');
+                exit();
+            }
+
             $_SESSION['auth'] = $usuario;
             flash()->push('mensagem', "Seja Bem Vindo, " . $usuario->nome. "!");
             header('location: /');
