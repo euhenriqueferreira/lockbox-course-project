@@ -5,9 +5,15 @@
     /*
         Consulta no DB para buscar as informações do livro com o $id
     */
-    $livro = $database->query("select * from livros where id = :id", Livro::class, ['id'=> $id])->fetch();
+    $livro = Livro::get($_GET['id']);
+    $avaliacoes = $database->query(
+        query:"select * from avaliacoes where livro_id = :id",
+        class: Avaliacao::class,
+        params: ['id'=> $_GET['id']]
+    )->fetchAll();
+
 
     // Chama a view livros e passa o livro (resultado da query) como parâmetro.
-    view('livro', ['livro'=>$livro]);
+    view('livro', compact('livro', 'avaliacoes'));
 
 ?>

@@ -55,4 +55,13 @@
 
         return $config;
     }
+
+
+    function auth(){
+        if(!isset($_SESSION['auth'])){
+            return false; 
+        }
+
+        return $_SESSION['auth'];
+    }
 ?>

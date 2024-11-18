@@ -1,7 +1,7 @@
 <?php
 
     class Validacao{
-
+        
         public $validacoes = [];
 
         public static function validar($regras, $dados){
@@ -36,7 +36,7 @@
 
         private function required($campo, $valor){
             if(strlen($valor) == 0){
-                $this->validacoes[] = "O $campo é obrigatório";
+                $this->validacoes[] = "O campo de $campo é obrigatório";
             }
         }
 
