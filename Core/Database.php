@@ -1,4 +1,9 @@
 <?php
+
+    namespace Core;
+
+    use PDO;
+
     class Database
     {
         private $db;
@@ -42,10 +47,4 @@
         }
     }
 
-    /*
-        Quando o Index faz um require para essa classe, ela recebe a variavel $config
-        vinda do index.php por cascata e instancia um objeto Database (essa classe) 
-        e armazena na variavel $database;
-    */
-    $database = new Database(config('database'));
 ?>

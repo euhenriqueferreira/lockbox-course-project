@@ -1,18 +1,11 @@
 <?php
-    require '../models/Livro.php';
-    require '../models/Usuario.php';
-    require '../models/Avaliacao.php';
+    require '../Core/functions.php';
+
+    spl_autoload_register(function($class){
+        require base_path("{$class}.php");
+    });
 
     session_start();
-
-    // Importando arquivo de funções
-    require '../Flash.php';
-    require '../functions.php';
-    require '../Validacao.php';
-
-    /* Chamada do arquivo do DB, que recebe por cascata o valor da variável $config */
-    require '../database.php';
-    
-    // Index chama o Route php
-    require '../routes.php';
+   
+    require base_path('/config/routes.php');
 ?>

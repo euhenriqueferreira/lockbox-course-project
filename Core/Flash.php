@@ -1,4 +1,7 @@
 <?php
+    namespace Core;
+
+
     // Classe para Adicionar Mensagens FLash na sessão
     class Flash{
 

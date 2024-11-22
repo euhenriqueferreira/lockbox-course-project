@@ -1,21 +1,18 @@
 <?php
 
+    function base_path($path){
+        return __DIR__ . '/../' . $path;
+    }
+
     /*
         Essa função simplifica a maneira de chamar uma view
     */
     function view($view, $data = []){
-        /*
-            Cria variaveis com o $key = $value dinamicamente;
-        */
         foreach ($data as $key => $value) {
             $$key = $value;
         }
 
-        /* 
-            Chama o app.php, que dinamicamente consegue ler a variavel $view,
-            por causa do escopo, e usar dentro do arquivo para chamar a view certa
-        */
-         require 'views/templates/app.php';
+         require base_path('views/templates/app.php');
     }
 
 
@@ -43,11 +40,11 @@
 
     // Cria um novo objeto da classe Flash
     function flash(){
-        return new Flash;
+        return new Core\Flash;
     }
 
     function config($chave = null){
-        $config =  require 'config.php';
+        $config =  require base_path('config/config.php');
 
         if(strlen($chave) > 0){
             return $config[$chave];
@@ -63,5 +60,20 @@
         }
 
         return $_SESSION['auth'];
+    }
+
+
+    function old($campo){
+        $post = $_POST;
+
+        if(isset($post[$campo])){
+            return $post[$campo];
+        }
+
+        return '';
+    }
+
+    function redirect($uri){
+        return header('Location: ' . $uri);
     }
 ?>

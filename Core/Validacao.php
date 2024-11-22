@@ -1,5 +1,6 @@
 <?php
-
+    namespace Core;
+    
     class Validacao{
         
         public $validacoes = [];
@@ -36,7 +37,7 @@
 
         private function required($campo, $valor){
             if(strlen($valor) == 0){
-                $this->validacoes[] = "O campo de $campo é obrigatório";
+                $this->addError($campo,  "O campo de $campo é obrigatório");
             }
         }
 
@@ -53,41 +54,43 @@
             )->fetch();
 
             if($resultado){
-                $this->validacoes[] = 'Esse e-mail já está em uso';
+                $this->addError($campo,  'Esse e-mail já está em uso');
             }
         }
 
         private function email($campo, $valor){
             if( ! filter_var($valor, FILTER_VALIDATE_EMAIL)){
-                $this->validacoes[] = "O $campo é inválido!";
+                $this->addError($campo,  "O $campo é inválido!");
             }
         }
 
         private function confirmed($campo, $valor, $valorDeConfirmacao){
             if( $valor != $valorDeConfirmacao){
-                $this->validacoes[] = "O $campo de confirmação está diferente!";
+                $this->addError($campo,  "O $campo de confirmação está diferente!");
             }
         }
 
         private function min($min, $campo, $valor){
             if(strlen($valor) <= $min){
-                $this->validacoes[] = "O $campo precisa ter no mínimo $min caracteres!";
+                $this->addError($campo,  "O $campo precisa ter no mínimo $min caracteres!");
             }
         }
 
         private function max($max, $campo, $valor){
             if(strlen($valor) > $max){
-                $this->validacoes[] = "O $campo precisa ter no máximo $max caracteres!";
+                $this->addError($campo, "O $campo precisa ter no máximo $max caracteres!");
             }
         }
 
         private function strong($campo, $valor){
             if( ! strpbrk($valor, '!@#$%&*().,;?/')){
-                $this->validacoes[] = "A $campo precisa conter pelo menos um caractere especial";
+                $this->addError($campo, "A $campo precisa conter pelo menos um caractere especial");
             }
         }
 
-
+        private function addError($campo, $erro){
+            $this->validacoes[$campo][] = $erro;
+        }
 
         public function naoPassou($nomeCustomizado = null){
             $chave = 'validacoes';
